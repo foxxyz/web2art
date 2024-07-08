@@ -1,0 +1,22 @@
+{
+  "name": "web2art",
+  "version": "0.5.0",
+  "type": "module",
+  "description": "Capture URL screenshot and display it on a Samsung Frame TV",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint"
+  },
+  "author": "Ivo Janssen <hello@ivo.la>",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "fresh-console": "^2.0.0",
+    "playwright": "^1.45.1",
+    "samsung-frame-connect": "^0.5.2"
+  },
+  "devDependencies": {
+    "@appliedminds/eslint-config": "^2.0.1",
+    "eslint": "^9.6.0"
+  }
+}

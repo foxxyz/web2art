@@ -1,0 +1,10 @@
+[Unit]
+Description=Run web2art Periodically
+Requires=web2art.service
+
+[Timer]
+Unit=web2art.service
+OnCalendar=*-*-* 00:30:00
+
+[Install]
+WantedBy=timers.target
