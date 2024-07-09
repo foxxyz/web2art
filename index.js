@@ -16,6 +16,8 @@ parser.add_argument('--host', { help: 'TV Host or IP', required: true, default: 
 parser.add_argument('--url', { help: 'URL to capture', required: true, default: SUPPRESS })
 parser.add_argument('--width', { help: 'Screenshot width to capture', default: 1920 })
 parser.add_argument('--height', { help: 'Screenshot width to capture', default: 1080 })
+parser.add_argument('--matte-type', { help: 'Type of matte to use when displaying', default: 'none', choices: ['none', 'modernthin', 'modern', 'modernwide', 'flexible', 'shadowbox', 'panoramic', 'triptych', 'mix', 'squares'] })
+parser.add_argument('--matte-color', { help: 'Color of matte to use when displaying', choices: ['black', 'neutral', 'antique', 'warm', 'polar', 'sand', 'seafoam', 'sage', 'burgandy', 'navy', 'apricot', 'byzantine', 'lavender', 'redorange', 'skyblue', 'turquoise'] })
 const args = parser.parse_args()
 
 async function captureScreenshot({ url, path = 'screenshot.png', width, height }) {
@@ -36,7 +38,7 @@ async function captureScreenshot({ url, path = 'screenshot.png', width, height }
     return path
 }
 
-async function sendToTV({ host, imagePath }) {
+async function sendToTV({ host, imagePath, matteType, matteColor }) {
     console.info('Connecting to TV...')
     const tv = new TV({ host, verbosity: 0 })
     await tv.connect()
@@ -46,7 +48,11 @@ async function sendToTV({ host, imagePath }) {
     const imageBuffer = await readFile(imagePath)
     // Upload and return the content ID
     console.info('Uploading image to TV...')
-    const newImageID = await tv.upload(imageBuffer, { fileType: extname(imagePath).slice(1) })
+    const newImageID = await tv.upload(imageBuffer, {
+        fileType: extname(imagePath).slice(1),
+        matteType,
+        matteColor,
+    })
     // Set the TV to the new art
     console.info('Setting new art...')
     await tv.setCurrentArt({ id: newImageID })
@@ -55,7 +61,12 @@ async function sendToTV({ host, imagePath }) {
 }
 
 const imagePath = await captureScreenshot(args)
-await sendToTV({ ...args, imagePath })
+await sendToTV({
+    ...args,
+    imagePath,
+    matteType: args.matte_type,
+    matteColor: args.matte_color
+})
 
 // eslint-disable-next-line
 console.success('Done!')
