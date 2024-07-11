@@ -6,7 +6,7 @@ RSYNC_DIR=$DEPLOY_DIR
 
 set -e
 
-cd $SCRIPT_DIR
+cd $SCRIPT_DIR/..
 
 while getopts t:m:f flag
 do
@@ -47,6 +47,6 @@ echo "> Copying files..."
 rsync -av --exclude="node_modules" --exclude=".*" . $TARGET:$RSYNC_DIR
 
 echo "> Installing dependencies..."
-ssh $TARGET "npm install --omit=dev"
+ssh $TARGET "cd $DEPLOY_DIR && npm install --omit=dev"
 
 echo "> Done!"
