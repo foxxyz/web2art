@@ -34,7 +34,7 @@ The included deploy script in `/deploy/deploy.sh` can automate deployment. The d
 
 Sample systemd service files are included in `deploy` for automating periodic execution of web2art.
 
-1. Modify the `.service` file and fill in the correct CLI arguments for your use case
+1. Rename and modify the `.example.service` and `.example.timer` files and fill in the correct CLI arguments for your use case
 2. Enable the service: `systemctl enable /opt/web2art/deploy/systemd/web2art.service`
 3. Enable the systemd timer: `systemctl enable /opt/web2art/deploy/systemd/web2art.timer`
 4. Start the timer: `systemctl start web2art.timer`

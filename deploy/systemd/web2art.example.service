@@ -1,6 +1,6 @@
 [Unit]
 Description=Example Web2art Service
-Wants=web2art.timer
+Wants=web2art.example.timer
 
 [Service]
 Type=oneshot

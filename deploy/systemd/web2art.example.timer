@@ -1,9 +1,9 @@
 [Unit]
 Description=Run web2art Periodically
-Requires=web2art.service
+Requires=web2art.example.service
 
 [Timer]
-Unit=web2art.service
+Unit=web2art.example.service
 OnCalendar=*-*-* 00:30:00
 
 [Install]
