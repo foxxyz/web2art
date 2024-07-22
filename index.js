@@ -18,13 +18,15 @@ parser.add_argument('--width', { help: 'Screenshot width to capture', default: 1
 parser.add_argument('--height', { help: 'Screenshot width to capture', default: 1080 })
 parser.add_argument('--matte-type', { help: 'Type of matte to use when displaying', default: 'none', choices: ['none', 'modernthin', 'modern', 'modernwide', 'flexible', 'shadowbox', 'panoramic', 'triptych', 'mix', 'squares'] })
 parser.add_argument('--matte-color', { help: 'Color of matte to use when displaying', choices: ['black', 'neutral', 'antique', 'warm', 'polar', 'sand', 'seafoam', 'sage', 'burgandy', 'navy', 'apricot', 'byzantine', 'lavender', 'redorange', 'skyblue', 'turquoise'] })
+parser.add_argument('--media-type', { help: 'Set media type used to load page', default: 'print' })
 const args = parser.parse_args()
 
-async function captureScreenshot({ url, path = 'screenshot.png', width, height }) {
+async function captureScreenshot({ url, path = 'screenshot.png', width, height, mediaType }) {
     console.info('Launching browser...')
     const browser = await chromium.launch()
     console.info('Creating page...')
     const page = await browser.newPage({ viewport: { width, height } })
+    await page.emulateMedia({ media: mediaType })
     console.info('Navigating to address...')
     await page.goto(url)
     console.info('Giving time to render...')
@@ -60,7 +62,10 @@ async function sendToTV({ host, imagePath, matteType, matteColor }) {
     await tv.close()
 }
 
-const imagePath = await captureScreenshot(args)
+const imagePath = await captureScreenshot({
+    ...args,
+    mediaType: args.media_type,
+})
 await sendToTV({
     ...args,
     imagePath,
