@@ -7,6 +7,3 @@ Type=oneshot
 ExecStart=/usr/bin/node /opt/web2art/index.js --url https://example.com --host 192.168.1.2
 Environment=NODE_ENV=production
 WorkingDirectory=/opt/web2art
-
-[Install]
-WantedBy=multi-user.target
