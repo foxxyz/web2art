@@ -1,6 +1,6 @@
 {
   "name": "web2art",
-  "version": "0.6.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "Capture URL screenshot and display it on a Samsung Frame TV",
   "main": "index.js",
