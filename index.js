@@ -42,7 +42,7 @@ async function captureScreenshot({ url, path = 'screenshot.png', width, height, 
 
 async function sendToTV({ host, imagePath, matteType, matteColor }) {
     console.info('Connecting to TV...')
-    const tv = new TV({ host, verbosity: 0 })
+    const tv = new TV({ host, verbosity: 0, services: ['art-mode'] })
     await tv.connect()
     // eslint-disable-next-line
     console.success('Successfully connected to TV!')
