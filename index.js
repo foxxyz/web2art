@@ -19,6 +19,7 @@ parser.add_argument('--height', { help: 'Screenshot width to capture', default: 
 parser.add_argument('--matte-type', { help: 'Type of matte to use when displaying', default: 'none', choices: ['none', 'modernthin', 'modern', 'modernwide', 'flexible', 'shadowbox', 'panoramic', 'triptych', 'mix', 'squares'] })
 parser.add_argument('--matte-color', { help: 'Color of matte to use when displaying', choices: ['black', 'neutral', 'antique', 'warm', 'polar', 'sand', 'seafoam', 'sage', 'burgandy', 'navy', 'apricot', 'byzantine', 'lavender', 'redorange', 'skyblue', 'turquoise'] })
 parser.add_argument('--media-type', { help: 'Set media type used to load page', default: 'print' })
+parser.add_argument('--max-items-on-device', { help: 'Delete items on the device above this limit', type: 'int', default: SUPPRESS })
 const args = parser.parse_args()
 
 async function captureScreenshot({ url, path = 'screenshot.png', width, height, mediaType }) {
@@ -40,7 +41,7 @@ async function captureScreenshot({ url, path = 'screenshot.png', width, height, 
     return path
 }
 
-async function sendToTV({ host, imagePath, matteType, matteColor }) {
+async function sendToTV({ host, imagePath, matteType, matteColor, maxItems }) {
     console.info('Connecting to TV...')
     const tv = new TV({ host, verbosity: 0, services: ['art-mode'] })
     await tv.connect()
@@ -58,6 +59,22 @@ async function sendToTV({ host, imagePath, matteType, matteColor }) {
     // Set the TV to the new art
     console.info('Setting new art...')
     await tv.setCurrentArt({ id: newImageID })
+
+    // Delete any items above the maximum
+    if (maxItems && maxItems > 0) {
+        console.part.info('Checking number of items on device...')
+        const items = await tv.getAvailableArt()
+        console.info(items.length)
+
+        // Sort by descending date
+        items.sort((a, b) => b.date - a.date)
+        if (items.length > maxItems) {
+            console.part.warn(`Max items reached. Deleting ${items.length - maxItems} items...`)
+            await tv.deleteArt(items.slice(maxItems).map(item => item.id))
+            console.success('Success')
+        }
+    }
+
     console.info('Closing connection to TV...')
     await tv.close()
 }
@@ -70,7 +87,8 @@ await sendToTV({
     ...args,
     imagePath,
     matteType: args.matte_type,
-    matteColor: args.matte_color
+    matteColor: args.matte_color,
+    maxItems: args.max_items_on_device,
 })
 
 // eslint-disable-next-line
