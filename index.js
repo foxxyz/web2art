@@ -14,6 +14,7 @@ const parser = new ArgumentParser({ add_help: true, description: packageInfo.des
 parser.add_argument('-v', { action: 'version', version: packageInfo.version })
 parser.add_argument('--host', { help: 'TV Host or IP', required: true, default: SUPPRESS })
 parser.add_argument('--url', { help: 'URL to capture', required: true, default: SUPPRESS })
+parser.add_argument('--render-time', { help: 'How many milliseconds to wait to let the given URL finish rendering', default: 5000 })
 parser.add_argument('--width', { help: 'Screenshot width to capture', default: 1920 })
 parser.add_argument('--height', { help: 'Screenshot width to capture', default: 1080 })
 parser.add_argument('--matte-type', { help: 'Type of matte to use when displaying', default: 'none', choices: ['none', 'modernthin', 'modern', 'modernwide', 'flexible', 'shadowbox', 'panoramic', 'triptych', 'mix', 'squares'] })
@@ -22,7 +23,7 @@ parser.add_argument('--media-type', { help: 'Set media type used to load page', 
 parser.add_argument('--max-items-on-device', { help: 'Delete items on the device above this limit', type: 'int', default: SUPPRESS })
 const args = parser.parse_args()
 
-async function captureScreenshot({ url, path = 'screenshot.png', width, height, mediaType }) {
+async function captureScreenshot({ url, path = 'screenshot.png', width, height, mediaType, renderTime }) {
     console.info('Launching browser...')
     const browser = await chromium.launch()
     console.info('Creating page...')
@@ -31,7 +32,7 @@ async function captureScreenshot({ url, path = 'screenshot.png', width, height, 
     console.info('Navigating to address...')
     await page.goto(url)
     console.info('Giving time to render...')
-    await setTimeout(2000)
+    await setTimeout(renderTime)
     console.info('Taking screenshot...')
     await page.screenshot({ path })
     console.info('Closing browser...')
@@ -82,6 +83,7 @@ async function sendToTV({ host, imagePath, matteType, matteColor, maxItems }) {
 const imagePath = await captureScreenshot({
     ...args,
     mediaType: args.media_type,
+    renderTime: args.render_time,
 })
 await sendToTV({
     ...args,
