@@ -12,11 +12,11 @@
   "dependencies": {
     "argparse": "^2.0.1",
     "fresh-console": "^2.0.0",
-    "playwright": "^1.48.2",
-    "samsung-frame-connect": "^0.9.0"
+    "playwright": "^1.55.1",
+    "samsung-frame-connect": "^0.9.1"
   },
   "devDependencies": {
-    "@appliedminds/eslint-config": "^2.0.1",
-    "eslint": "^9.13.0"
+    "@appliedminds/eslint-config": "^2.0.3",
+    "eslint": "^9.36.0"
   }
 }
